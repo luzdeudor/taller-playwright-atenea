@@ -19,12 +19,13 @@ export class LoginPage {
 
     async visitarPaginaLogin() {
         await this.page.goto('http://localhost:3000/login');
+        await this.page.waitForLoadState('networkidle');
 
     }
 
-    async completarFormularioLogin(usuario: {email: string, password: string}) {
+    async completarFormularioLogin(usuario: {email: string, contraseña: string}) {
         await this.emailInput.fill(usuario.email);
-        await this.passwordInput.fill(usuario.password);
+        await this.passwordInput.fill(usuario.contraseña);
     }
 
 
@@ -32,7 +33,7 @@ export class LoginPage {
         await this.loginButton.click();
     }
 
-    async completarYHacerClicBotonLogin(usuario: {email: string, password: string}){
+    async completarYHacerClicBotonLogin(usuario: {email: string, contraseña: string}){
         await this.completarFormularioLogin(usuario);
         await this.hacerClicBotonLogin();
     }

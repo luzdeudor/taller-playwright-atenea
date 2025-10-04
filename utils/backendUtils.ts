@@ -1,28 +1,25 @@
-import {Page, Locator, request} from '@playwright/test';
+import {APIRequestContext, expect} from '@playwright/test';
 
 
 export class BackendUtils {
-    readonly page:Page;  //readonly solo se lee una vez, y no va cambiar la variable
    
-   
-
-    //constructor inicializa los elementos  
-    constructor(page: Page) {
-        this.page = page;
-    }
-
-    async enviarRequestDeBackend(endpoint: string, data: any) {
-        const response = await this.page.request.post(endpoint, {
+    static async crearUsuarioPorAPI(request: APIRequestContext, usuario: any) {
+        const email = (usuario.email.split('@')[0]) + Date.now().toString() + '@' + usuario.email.split('@')[1];
+        const response = await request.post('http://localhost:4000/api/auth/signup', {
             headers: {
-                'Accept': 'applications/vnd.github.v3+json',
+                'Accept': 'application/vnd.github.v3+json',
+                //'Accept': '*/*',
                 'Content-Type': 'application/json',
             },
-            data: data
+            data: {
+                firstName: usuario.nombre,
+                lastName:  usuario.apellido,
+                email: email,
+                password: usuario.contraseña,
+            }
         });
-           const responseBody = await response.json();
-           return responseBody; 
+           expect(response.status()).toBe(201);
+           return {email: email, contraseña: usuario.contraseña};
     }
-
-
 
 }
