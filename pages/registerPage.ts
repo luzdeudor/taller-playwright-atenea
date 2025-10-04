@@ -35,11 +35,11 @@ export class RegisterPage {
         await this.passwordInput.fill(email);
     }*/
 
-    async completarFormularioRegistro(usuario: {nombre: string, apellido: string, email: string, password: string}) {
+    async completarFormularioRegistro(usuario: {nombre: string, apellido: string, email: string, contraseña: string}) {
         await this.firstNameInput.fill(usuario.nombre);
         await this.lastNameInput.fill(usuario.apellido);
         await this.emailInput.fill(usuario.email);
-        await this.passwordInput.fill(usuario.password);
+        await this.passwordInput.fill(usuario.contraseña);
     }
 
 
@@ -47,7 +47,7 @@ export class RegisterPage {
         await this.registerButton.click();
     }
 
-    async completarYHacerClicBotonRegistro(usuario: {nombre: string, apellido: string, email: string, password: string}){
+    async completarYHacerClicBotonRegistro(usuario: {nombre: string, apellido: string, email: string, contraseña: string}){
         await this.completarFormularioRegistro(usuario);
         await this.hacerClicBotonRegistro();
     }

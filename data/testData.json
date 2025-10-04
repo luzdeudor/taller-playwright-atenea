@@ -2,7 +2,7 @@
     "usuarioValido": {
         "nombre": "Luz",
         "apellido": "Deudor",
-        "email": "luzpruebar@gmail.com",
-        "password": "123456"
+        "email": "luzvalido@gmail.com",
+        "contraseña": "123456"
     }
 }
