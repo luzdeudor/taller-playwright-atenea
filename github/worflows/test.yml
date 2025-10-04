@@ -1,0 +1,68 @@
+name: CI - clonando App y ejecutando test
+
+on:
+  push:
+  branches: [main]
+
+  pull_request:
+  branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        images: mongo:6.0
+        ports:
+          - 27017:27017
+        
+    env:
+      MONGO_URI: ${{secrets.MONGO_URI}}
+      JWT_SECRET: ${{secrets.JWT_SECRET}}
+      PORT: 4000
+      VITE_API_URL: http://localhost:4000/api
+
+    steps:
+      - name: Checkout repo actual (con el workflow)
+        uses: actions/checkout@v3
+          
+      - name: Clonar repo Athena Redux Bank
+        run: |
+          git clone git@github.com:Atenea-Conocimientos/redux-athena-bank.git  
+          
+      - name: Crear archivo .env para backend
+        run: |
+          echo "MONGO_URI=${{ env.MONGO_URI }}" > backend/.env
+          echo "JWT_SECRET=${{ env.JWT_SECRET }}" >> backend/.env
+          echo "PORT=${{ env.PORT }}" >> backend/.env
+          echo "VITE_API_URL=${{ env.VITE_API_URL }}" >> backend/.env
+
+      - name: Instalar dependencias de backend
+        run: |
+          cd app/backend
+          npm install
+
+      - name: Construir backend
+        run: |
+          cd app/backend
+          npm run dev > backend.log 2>&1 &
+          
+          # se instala la herramienta wait-on globalmente
+      - name:   Instalar wait-on
+        run: npm install -g wait-on
+
+        # esperar que el backend se levante en el puerto 4000
+      - name: esperar backend
+        run: wait-on tcp:4000
+
+        # instalar dependencias del frontend
+      - name: Instalar dependencias frontend
+        run: |
+          cd app/frontend
+          npm install
+        env:
+          VITE_API_URI: ${{env.VITE_API_URI}} 
+          
+
+
+
