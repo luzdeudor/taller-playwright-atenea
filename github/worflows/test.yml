@@ -2,10 +2,10 @@ name: CI - clonando App y ejecutando test
 
 on:
   push:
-  branches: [main]
+    branches: [main]
 
   pull_request:
-  branches: [main]
+    branches: [main]
 
 jobs:
   test:
@@ -61,7 +61,11 @@ jobs:
           cd app/frontend
           npm install
         env:
-          VITE_API_URI: ${{env.VITE_API_URI}} 
+          VITE_API_URI: ${{ env.VITE_API_URI }} 
+
+        # esperar que se levante el front
+      - name: esperar frontend
+        run: wait-on http://localhost:3000
           
 
 
